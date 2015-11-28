@@ -1,0 +1,19 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "description": "Data visualization app",
+  "main": "ui.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t3g7/web.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/t3g7/web/issues"
+  },
+  "homepage": "https://github.com/t3g7/web#readme"
+}
