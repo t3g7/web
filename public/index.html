@@ -4,13 +4,9 @@
     <title>TwitterGraph</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="style/style.css">
-    <link rel="stylesheet" type="text/css" href="lib/style/dc.css">
   </head>
   <body>
-    <script type="text/javascript" src="lib/js/crossfilter.js"></script>
     <script type="text/javascript" src="lib/js/d3.js"></script>
-    <script type="text/javascript" src="lib/js/dc.js"></script>
-
     <script>
       var margin = {
         top: 20,
@@ -18,7 +14,7 @@
         bottom: 30,
         left: 40
       },
-      width = 500 - margin.left - margin.right,
+      width = 600 - margin.left - margin.right,
       height = 200 - margin.top - margin.bottom;
 
       var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
@@ -45,25 +41,56 @@
         //console.log(data);
 
         var count = {};
+        //var count2 = [];
         data.forEach(function(d) {
           //var t = d.created_at.split(/[-T:]/);
-          //var date = new Date(t[0], t[1], t[2]);
+          //var date = new Date(t[0], t[1], t[2], t[3], t[4]);
 
           var datetime = formatDateUtc.parse(d.created_at);
-          var date = formatDateUtc(datetime).split('T')[0];
-          console.log(date);
+          var date = formatDateUtc(datetime).split('T')[0]
+                      + ' '
+                      + formatDateUtc(datetime).split('T')[1].split(':')[0]
+                      + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+          //count2.push(date);
+
+          //console.log(date);
           count[date] = (count[date]||0) + 1;
         });
+
+        /*console.log(count);
+
+        count2 = count2.sort(function(a, b) {
+          return new Date(a) - new Date(b);
+        });
+
+        var minDate = new Date(count2[0]).getTime();
+        var maxDate = new Date(count2[count2.length - 1]).getTime();
+
+        var count3 = [];
+        var currentDate = minDate;
+        var d;
+
+        while (currentDate <= maxDate) {
+          d = new Date(currentDate);
+          count3.push(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes());
+          currentDate += (60 * 1000);
+        }*/
 
         var freq_data = [];
         for (var date in count) {
           if (count.hasOwnProperty(date)) {
             freq_data.push({
-              date: date,
+              date: new Date(date),
               frequency: count[date]
             })
           }
         }
+
+        freq_data = freq_data.sort(function(a, b) {
+          return new Date(a.date) - new Date(b.date);
+        });
+
+        console.log(freq_data)
 
         var tweet_texts = [];
         data.forEach(function(d) {
@@ -124,7 +151,6 @@
           .attr("height", function (d) {
             return height - y(d.frequency);
           });
-
 
         function type(d) {
           d.frequency = +d.frequency;
