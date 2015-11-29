@@ -55,20 +55,43 @@
           count[date] = (count[date]||0) + 1;
         });
 
-        var data = [];
+        var freq_data = [];
         for (var date in count) {
           if (count.hasOwnProperty(date)) {
-            data.push({
+            freq_data.push({
               date: date,
               frequency: count[date]
             })
           }
         }
 
-        x.domain(data.map(function (d) {
+        var tweet_texts = [];
+        data.forEach(function(d) {
+          var body = d.body;
+          var retweets = d.retweet_count;
+          var favs = d.favorite_count;
+
+          if (tweet_texts.indexOf(body) == -1) {
+            tweet_texts.push({
+              body: body,
+              retweets: retweets,
+              favs: favs
+            });
+          }
+        })
+
+        d3.select('body').append('ul').selectAll('li')
+          .data(tweet_texts)
+          .enter()
+          .append('li')
+          .html(function(d) {
+            return d.body + " " + d.favs + " " + d.retweets;
+          });
+
+        x.domain(freq_data.map(function (d) {
           return d.date;
         }));
-        y.domain([0, d3.max(data, function (d) {
+        y.domain([0, d3.max(freq_data, function (d) {
           return d.frequency;
         })]);
 
@@ -88,7 +111,7 @@
             .text("Frequency");
 
         svg.selectAll(".bar")
-            .data(data)
+            .data(freq_data)
             .enter().append("rect")
             .attr("class", "bar")
             .attr("x", function (d) {
