@@ -14,7 +14,7 @@
         bottom: 30,
         left: 40
       },
-      width = 600 - margin.left - margin.right,
+      width = 1500 - margin.left - margin.right,
       height = 200 - margin.top - margin.bottom;
 
       var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
@@ -37,7 +37,7 @@
 
       var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
-      d3.json('data.json', function(error, data) {
+      d3.json('http://localhost:8080/tweets', function(error, data) {
         //console.log(data);
 
         var count = {};
