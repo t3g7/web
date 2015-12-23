@@ -4,10 +4,30 @@
     <title>TwitterGraph</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link href="lib/style/c3.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <script type="text/javascript" src="lib/js/d3.js"></script>
+    <script type="text/javascript" src="lib/js/socket.io.js"></script>
+    <div id="chart"></div>
+
     <script>
+      var socket = io('http://localhost:8080/');
+
+      socket.on('connect', function() {
+        console.log("Connected");
+      });
+
+      socket.on('server-msg', function(data) {
+        document.write(data);
+      });
+
+      socket.on('tweets', function(data) {
+        console.log(data);
+      });
+    </script>
+
+    <!--<script>
       var margin = {
         top: 20,
         right: 20,
@@ -51,6 +71,7 @@
                       + ' '
                       + formatDateUtc(datetime).split('T')[1].split(':')[0]
                       + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+                      //+ ':' + formatDateUtc(datetime).split('T')[1].split(':')[2];
           //count2.push(date);
 
           //console.log(date);
@@ -141,23 +162,35 @@
             .data(freq_data)
             .enter().append("rect")
             .attr("class", "bar")
+            /*.attr("fill", function(d) {
+              console.log(d.sentiment);
+              if (d.sentiment === "POSITIVE") {
+                return "green";
+              } else if (d.sentiment === "NEUTRAL") {
+                return "yellow";
+              } else if (d.sentiment === "NEGATIVE") {
+                return "red";
+              } else {
+                return "blue";
+              }
+            })*/
             .attr("x", function (d) {
               return x(d.date);
-          })
-          .attr("width", x.rangeBand())
-          .attr("y", function (d) {
-            return y(d.frequency);
-          })
-          .attr("height", function (d) {
-            return height - y(d.frequency);
-          });
+            })
+            .attr("width", x.rangeBand())
+            .attr("y", function (d) {
+              return y(d.frequency);
+            })
+            .attr("height", function (d) {
+              return height - y(d.frequency);
+            });
 
         function type(d) {
           d.frequency = +d.frequency;
           return d;
         }
       });
-    </script>
+    </script>-->
   </body>
 
 </html>
