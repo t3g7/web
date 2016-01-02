@@ -10,6 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/t3g7/web.git"
   },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*"
+  },
   "author": "",
   "license": "",
   "bugs": {

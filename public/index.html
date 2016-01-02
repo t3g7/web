@@ -1,196 +1,94 @@
-<!DOCTYPE html>
-<html>
+<!--
+  Material Design Lite
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
+
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TwitterGraph</title>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="style/style.css">
-    <link href="lib/style/c3.css" rel="stylesheet" type="text/css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./lib/style/material.min.css">
+    <link rel="stylesheet" href="./lib/style/styles.css">
   </head>
   <body>
-    <script type="text/javascript" src="lib/js/d3.js"></script>
-    <script type="text/javascript" src="lib/js/socket.io.js"></script>
-    <div id="chart"></div>
+    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">TwitterGraph</span>
+          <div class="mdl-layout-spacer"></div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+              <i class="material-icons">search</i>
+            </label>
+            <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" type="text" id="search">
+              <label class="mdl-textfield__label" for="search">Enter your query...</label>
+            </div>
+          </div>
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+            <i class="material-icons">more_vert</i>
+          </button>
+          <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+            <li class="mdl-menu__item">About</li>
+          </ul>
+        </div>
+      </header>
 
-    <script>
-      var socket = io('http://localhost:8080/');
+      <main class="mdl-layout__content mdl-color--grey-100">
 
-      socket.on('connect', function() {
-        console.log("Connected");
-      });
+        <div class="content-grid mdl-grid">
+          <div class="demo-cards mdl-cell mdl-cell--6-col mdl-grid mdl-grid--no-spacing">
+            <div class="tweets-freq-graph mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+              Tweets/min graph
+            </div>
 
-      socket.on('server-msg', function(data) {
-        document.write(data);
-      });
+            <div class="demo-separator mdl-cell--1-col"></div>
 
-      socket.on('tweets', function(data) {
-        console.log(data);
-      });
-    </script>
+            <div class="left-bottom-grid mdl-grid mdl-cell--12-col mdl-grid--no-spacing">
+              <div class="mdl-grid mdl-cell mdl-cell--7-col mdl-grid--no-spacing">
+                <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                  Response time per tweet
+                </div>
+              </div>
+              <div class="mdl-grid mdl-cell mdl-cell--5-col mdl-grid--no-spacing">
+                <div class="mdl-grid mdl-cell--12-col mdl-grid--no-spacing">
+                  <div class="nb-tweets mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                    #Tweets since connection
+                  </div>
+                  <div class="freq-tweets mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                    Tweets/s
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!--<script>
-      var margin = {
-        top: 20,
-        right: 20,
-        bottom: 30,
-        left: 40
-      },
-      width = 1500 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+          <div class="tweets-log mdl-card mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+            Tweets log
+          </div>
+        </div>
 
-      var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
-      var y = d3.scale.linear().range([height, 0]);
-
-      var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom");
-
-      var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient("left")
-                .ticks(10);
-
-      var svg = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
-
-      d3.json('http://localhost:8080/tweets', function(error, data) {
-        //console.log(data);
-
-        var count = {};
-        //var count2 = [];
-        data.forEach(function(d) {
-          //var t = d.created_at.split(/[-T:]/);
-          //var date = new Date(t[0], t[1], t[2], t[3], t[4]);
-
-          var datetime = formatDateUtc.parse(d.created_at);
-          var date = formatDateUtc(datetime).split('T')[0]
-                      + ' '
-                      + formatDateUtc(datetime).split('T')[1].split(':')[0]
-                      + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
-                      //+ ':' + formatDateUtc(datetime).split('T')[1].split(':')[2];
-          //count2.push(date);
-
-          //console.log(date);
-          count[date] = (count[date]||0) + 1;
-        });
-
-        /*console.log(count);
-
-        count2 = count2.sort(function(a, b) {
-          return new Date(a) - new Date(b);
-        });
-
-        var minDate = new Date(count2[0]).getTime();
-        var maxDate = new Date(count2[count2.length - 1]).getTime();
-
-        var count3 = [];
-        var currentDate = minDate;
-        var d;
-
-        while (currentDate <= maxDate) {
-          d = new Date(currentDate);
-          count3.push(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes());
-          currentDate += (60 * 1000);
-        }*/
-
-        var freq_data = [];
-        for (var date in count) {
-          if (count.hasOwnProperty(date)) {
-            freq_data.push({
-              date: new Date(date),
-              frequency: count[date]
-            })
-          }
-        }
-
-        freq_data = freq_data.sort(function(a, b) {
-          return new Date(a.date) - new Date(b.date);
-        });
-
-        console.log(freq_data)
-
-        var tweet_texts = [];
-        data.forEach(function(d) {
-          var body = d.body;
-          var retweets = d.retweet_count;
-          var favs = d.favorite_count;
-
-          if (tweet_texts.indexOf(body) == -1) {
-            tweet_texts.push({
-              body: body,
-              retweets: retweets,
-              favs: favs
-            });
-          }
-        })
-
-        d3.select('body').append('ul').selectAll('li')
-          .data(tweet_texts)
-          .enter()
-          .append('li')
-          .html(function(d) {
-            return d.body + " " + d.favs + " " + d.retweets;
-          });
-
-        x.domain(freq_data.map(function (d) {
-          return d.date;
-        }));
-        y.domain([0, d3.max(freq_data, function (d) {
-          return d.frequency;
-        })]);
-
-        svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Frequency");
-
-        svg.selectAll(".bar")
-            .data(freq_data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            /*.attr("fill", function(d) {
-              console.log(d.sentiment);
-              if (d.sentiment === "POSITIVE") {
-                return "green";
-              } else if (d.sentiment === "NEUTRAL") {
-                return "yellow";
-              } else if (d.sentiment === "NEGATIVE") {
-                return "red";
-              } else {
-                return "blue";
-              }
-            })*/
-            .attr("x", function (d) {
-              return x(d.date);
-            })
-            .attr("width", x.rangeBand())
-            .attr("y", function (d) {
-              return y(d.frequency);
-            })
-            .attr("height", function (d) {
-              return height - y(d.frequency);
-            });
-
-        function type(d) {
-          d.frequency = +d.frequency;
-          return d;
-        }
-      });
-    </script>-->
+      </main>
+    </div>
+    <script src="./lib/js/material.min.js"></script>
   </body>
-
 </html>
