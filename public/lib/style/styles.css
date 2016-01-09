@@ -35,6 +35,8 @@
 
 .tweets-log {
   min-height: 89vh;
+  max-height: 89vh;
+  overflow-y: auto;
 }
 
 /* Template style */
