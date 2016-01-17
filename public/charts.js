@@ -4,8 +4,8 @@ var margin = {
         bottom: 30,
         left: 40
     },
-    width = 1500 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    width = 900 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 var y = d3.scale.linear().range([height, 0]);
@@ -30,7 +30,25 @@ var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 d3.json('data.json', function(error, data) {
     //console.log(data);
 
+    var countPos = {};
+    var countNeg = {};
+    var countNeu = {};
+    data.forEach(function(d) {
+      var datetime = formatDateUtc.parse(d.created_at);
+      var date = formatDateUtc(datetime).split('T')[0]
+          + ' '
+          + formatDateUtc(datetime).split('T')[1].split(':')[0]
+          + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+
+      countNeg[date] = 0;
+      countPos[date] = 0;
+      countNeu[date] = 0;
+    });
+
     var count = {};
+
+    var countSentiment = {};
+    var sentimentDict = {};
     //var count2 = [];
     data.forEach(function(d) {
         //var t = d.created_at.split(/[-T:]/);
@@ -43,13 +61,46 @@ d3.json('data.json', function(error, data) {
             + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
         //+ ':' + formatDateUtc(datetime).split('T')[1].split(':')[2];
         //count2.push(date);
+        var sentiment = d.sentiment;
 
-        //console.log(date);
+        countSentiment[sentiment+date] = (count[date]||0) + 1;
+
+        if (countSentiment)
+
+        sentimentDict[date] = countSentiment
+
+        /*var sentimentList = [];
+        if (date in sentimentDict) {
+          sentimentDict[date].push(sentiment);
+        } else {
+          sentimentList.push(sentiment);
+          sentimentDict[date] = sentimentList;
+        }*/
+
+
+        if (sentiment === "POSITIVE") {
+          countPos[date] = (countPos[date]||0) + 1;
+
+        } else if (sentiment === "NEGATIVE") {
+          countNeg[date] = (countNeg[date]||0) + 1;
+        } else if (sentiment === "NEUTRAL") {
+          countNeu[date] = (countNeu[date]||0) + 1;
+        }
+
+
         count[date] = (count[date]||0) + 1;
     });
 
-    /*console.log(count);
-
+    console.log(count);
+    console.log("countPOS: ");
+    console.log(countPos);
+    console.log("countNEG: ");
+    console.log(countNeg);
+    console.log("countNEU: ");
+    console.log(countNeu);
+    //console.log(countSentiment);
+    //console.log(sentimentDict);
+    /*
      count2 = count2.sort(function(a, b) {
      return new Date(a) - new Date(b);
      });
@@ -72,7 +123,8 @@ d3.json('data.json', function(error, data) {
         if (count.hasOwnProperty(date)) {
             freq_data.push({
                 date: new Date(date),
-                frequency: count[date]
+                frequency: count[date],
+                sentiment: sentimentDict[date]
             })
         }
     }
@@ -132,18 +184,7 @@ d3.json('data.json', function(error, data) {
         .data(freq_data)
         .enter().append("rect")
         .attr("class", "bar")
-        /*.attr("fill", function(d) {
-         console.log(d.sentiment);
-         if (d.sentiment === "POSITIVE") {
-         return "green";
-         } else if (d.sentiment === "NEUTRAL") {
-         return "yellow";
-         } else if (d.sentiment === "NEGATIVE") {
-         return "red";
-         } else {
-         return "blue";
-         }
-         })*/
+        .attr("fill", "teal")
         .attr("x", function (d) {
             return x(d.date);
         })
