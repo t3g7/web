@@ -232,11 +232,11 @@ d3.json('data.json', function(error, data) {
           return d.body + " " + d.sentiment  + " " + d.retweets;
       });
 
-  d3.select('.tweets-body').selectAll('th')
+  d3.select('.tweets-body').selectAll()
       .data(tweet_texts).enter()
-      .append('ul')
+      .append('tr')
       .html(function(d) {
-          return "<table class=\"mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp\"><thead><tr><th class=\"mdl-data-table__cell--non-numeric\">Text</th><th>Sentiment</th><th>Retweets</th></tr></thead><tbody><tr><td class=\"mdl-data-table__cell--non-numeric\">" + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td></tr></tbody></table>";
+          return "<td class=\"mdl-data-table__cell--non-numeric\">" + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
       });
 
   /* x.domain(freq_data.map(function (d) {
