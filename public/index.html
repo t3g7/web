@@ -58,17 +58,34 @@
         left: 0;
         top: -15px;
       }
+
+      .header-bar {
+        background-color: #3f51b5;
+      }
+      .header-title, .search-icon, .vert-icon {
+        color: #FFF;
+      }
+
+      .tweets-graph-title {
+        padding-top: 5px;
+        padding-left: 5px;
+      }
+
+      .demo-separator {
+        height: 16px !important;
+      }
+
 		</style>
   </head>
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">TwitterGraph</span>
+        <div class="header-bar mdl-layout__header-row">
+          <span class="header-title mdl-layout-title">TwitterGraph</span>
           <div class="mdl-layout-spacer"></div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
+              <i class="search-icon material-icons">search</i>
             </label>
             <div class="mdl-textfield__expandable-holder">
               <input class="mdl-textfield__input" type="text" id="search">
@@ -76,7 +93,7 @@
             </div>
           </div>
           <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-            <i class="material-icons">more_vert</i>
+            <i class="vert-icon material-icons">more_vert</i>
           </button>
           <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
             <li class="mdl-menu__item">About</li>
@@ -89,7 +106,9 @@
         <div class="content-grid mdl-grid">
           <div class="demo-cards mdl-cell mdl-cell--6-col mdl-grid mdl-grid--no-spacing">
             <div class="tweets-freq-graph mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-              Tweets/min graph
+              <div class="tweets-graph-title">
+                <h2 class="mdl-card__title-text">Tweets/min</h2>
+              </div>
               <div id="bar">
               </div>
             </div>
