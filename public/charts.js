@@ -1,6 +1,6 @@
 var w = 825;
-var h = 240;
-var padding = {top: 20, right: 40, bottom: 30, left: 20};
+var h = 250;
+var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
@@ -147,7 +147,7 @@ d3.json('data.json', function(error, data) {
 			    return xScale(new Date(d.key));
     		})
     		.attr("y", function(d) {
-    			return -( - yScale(d.value) - 210 + (h - padding.top - padding.bottom) * 2);
+    			return -( - yScale(d.value) - 190 + (h - padding.top - padding.bottom) * 2);
     		})
     		.attr("height", function(d) {
     			return - yScale(d.value) + (h - padding.top - padding.bottom);
@@ -224,13 +224,13 @@ d3.json('data.json', function(error, data) {
     }
   });
 
-  d3.select('.tweets-log').append('ul').selectAll('li')
+  /*d3.select('.tweets-log').append('ul').selectAll('li')
       .data(tweet_texts)
       .enter()
       .append('li')
       .html(function(d) {
           return d.body + " " + d.sentiment  + " " + d.retweets;
-      });
+      });*/
 
   d3.select('.tweets-body').selectAll()
       .data(tweet_texts).enter()
