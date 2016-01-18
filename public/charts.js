@@ -211,12 +211,19 @@ d3.json('data.json', function(error, data) {
           return d.body + " " + d.sentiment  + " " + d.retweets;
       });
 
-  x.domain(freq_data.map(function (d) {
+  d3.select('.tweets-body').selectAll('th')
+      .data(tweet_texts).enter()
+      .append('ul')
+      .html(function(d) {
+          return "<table class=\"mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp\"><thead><tr><th class=\"mdl-data-table__cell--non-numeric\">Text</th><th>Sentiment</th><th>Retweets</th></tr></thead><tbody><tr><td class=\"mdl-data-table__cell--non-numeric\">" + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td></tr></tbody></table>";
+      });
+
+  /* x.domain(freq_data.map(function (d) {
       return d.date;
   }));
   y.domain([0, d3.max(freq_data, function (d) {
       return d.frequency;
-  })]);
+  })]); */
 
   function type(d) {
       d.frequency = +d.frequency;
