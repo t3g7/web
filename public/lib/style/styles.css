@@ -14,8 +14,46 @@
  * limitations under the License.
  */
 
+.mdl-data-table td {
+  padding-top: 12px !important;
+  padding-bottom: 8px !important;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+#bar {
+  width: inherit;
+  left: 0;
+  top: -15px;
+}
+
+.header-bar {
+  background-color: #3f51b5;
+}
+.header-title, .search-icon, .vert-icon {
+  color: #FFF;
+}
+
+.tweets-graph-title {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.demo-separator {
+  height: 16px !important;
+}
+
 .left-bottom-grid {
-  min-height: 56vh;
+  min-height: 57vh;
 }
 
 .nb-tweets {
@@ -214,9 +252,9 @@ _:-ms-input-placeholder, :root .demo-graph {
       -ms-flex-line-pack: start;
           align-content: flex-start;
 }
-.demo-cards .demo-separator {
+/*.demo-cards .demo-separator {
   height: 32px;
-}
+}*/
 .demo-cards .mdl-card__title.mdl-card__title {
   color: white;
   font-size: 24px;
@@ -275,4 +313,13 @@ _:-ms-input-placeholder, :root .demo-graph {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.mdl-data-table {
+  position:relative;
+  border:1px solid rgba(0,0,0,.12);
+  border-collapse:collapse;
+  white-space:normal;
+  font-size:13px;
+  background-color:#fff
 }
