@@ -1,14 +1,21 @@
 var w = 825;
-var h = 260;
+var h = 240;
 var padding = {top: 20, right: 40, bottom: 30, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
 d3.json('data.json', function(error, data) {
+  /*var color_hash = {
+		0: ["Neutral","#3182BD"],
+		1: ["Positive","#31A354"],
+		2: ["Negative","#D61B1D"]
+	};*/
+
+  // material colors
   var color_hash = {
-		0: ["Neutral","#ffff00"],
-		1: ["Positive","#00FF00"],
-		2: ["Negative","#ff0000"]
+		0: ["Neutral","#1E88E5"],
+		1: ["Positive","#4CAF50"],
+		2: ["Negative","#E53935"]
 	};
 
   var countPos = {};
@@ -48,8 +55,6 @@ d3.json('data.json', function(error, data) {
     } else if (sentiment === "NEUTRAL") {
       countNeu[date] = (countNeu[date]||0) + 1;
     }
-
-
   });
 
   var dataset = [
@@ -109,6 +114,18 @@ d3.json('data.json', function(error, data) {
 			return color_hash[dataset.indexOf(d)][1];
 		});
 
+    /*var tooltip = d3.select("body")
+      .data(dataset)
+      .enter().append("div")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .text(function(d) {
+        console.log(d);
+        //console.log(d[i].value);
+        return d.value + " tweets";
+      });*/
+
 	// Add a rect for each data value
 	var rects = groups.selectAll("rect")
 		.data(function(d) { return d; })
@@ -116,6 +133,10 @@ d3.json('data.json', function(error, data) {
 		.append("rect")
 		.attr("width", 2)
 		.style("fill-opacity", 1e-6);
+    /*.on("mouseover", function(){return tooltip.style("visibility", "visible");})
+    .on("mousemove", function(){return tooltip.style("top",
+    (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});*/
 
 	rects.transition()
 	      .duration(function(d, i) {
@@ -155,7 +176,7 @@ d3.json('data.json', function(error, data) {
 	legend.selectAll("g").data(dataset)
 		  .enter()
 		  .append('g')
-		  .each(function(d,i){
+		  .each(function(d,i) {
 		  	var g = d3.select(this);
 		  	g.append("rect")
 		  		.attr("x", w - padding.right - 65)
@@ -175,32 +196,32 @@ d3.json('data.json', function(error, data) {
 
   var freq_data = [];
   for (var date in count) {
-      if (count.hasOwnProperty(date)) {
-          freq_data.push({
-              date: new Date(date),
-              frequency: count[date],
-              sentiment: sentimentDict[date]
-          })
-      }
+    if (count.hasOwnProperty(date)) {
+      freq_data.push({
+        date: new Date(date),
+        frequency: count[date],
+        sentiment: sentimentDict[date]
+      })
+    }
   }
 
   freq_data = freq_data.sort(function(a, b) {
-      return new Date(a.date) - new Date(b.date);
+    return new Date(a.date) - new Date(b.date);
   });
 
   var tweet_texts = [];
   data.forEach(function(d) {
-      var body = d.body;
-      var retweets = d.retweet_count;
-      var sentiment = d.sentiment;
+    var body = d.body;
+    var retweets = d.retweet_count;
+    var sentiment = d.sentiment;
 
-      if (tweet_texts.indexOf(body) == -1) {
-          tweet_texts.push({
-              body: body,
-              retweets: retweets,
-              sentiment: sentiment
-          });
-      }
+    if (tweet_texts.indexOf(body) == -1) {
+      tweet_texts.push({
+        body: body,
+        retweets: retweets,
+        sentiment: sentiment
+      });
+    }
   });
 
   d3.select('.tweets-log').append('ul').selectAll('li')
@@ -226,7 +247,7 @@ d3.json('data.json', function(error, data) {
   })]); */
 
   function type(d) {
-      d.frequency = +d.frequency;
-      return d;
+    d.frequency = +d.frequency;
+    return d;
   }
 });
