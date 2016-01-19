@@ -269,15 +269,6 @@ function makeListTrends(data) {
     count[date] = (count[date]||0) + 1;
   });
 
-  var trends = [];
-  for (var date in count) {
-    if (count.hasOwnProperty(date)) {
-      trends.push({
-        date: new Date(date)
-      })
-    }
-  }
-
   var hashtagsList = [];
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.date);
@@ -296,7 +287,7 @@ function makeListTrends(data) {
       date: new Date(date)
     });
   });
-  console.log(hashtagsList);
+
   hashtagsList = hashtagsList.sort(function(a, b) {
     return new Date(b.date) - new Date(a.date);
   });
@@ -307,4 +298,47 @@ function makeListTrends(data) {
     .html(function(d) {
       return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
     });
+}
+
+function makeFreqGraph(data) {
+  //var connectedHour = new Date("January 14, 2016 08:39:00 GMT+0100");
+  var connectedHour = new Date().toISOString();
+  var datetime = formatDateUtc.parse(connectedHour);
+  var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
+      + ' '
+      + formatDateUtc(datetime).split('T')[1].split(':')[0]
+      + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
+
+  var freqList = [];
+  data.forEach(function(d) {
+    var datetime = formatDateUtc.parse(d.date);
+    var date = formatDateUtc(datetime).split('T')[0]
+        + ' '
+        + formatDateUtc(datetime).split('T')[1].split(':')[0]
+        + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+
+    freqList.push({
+      freq: d.count,
+      date: new Date(date)
+    });
+  });
+
+  freqList = freqList.sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  var keyAtConnectedHour;
+  for (var key in freqList) {
+    if (connectedHour.getTime() <= freqList[key].date.getTime()) {
+      keyAtConnectedHour = key;
+    }
+  }
+
+  var countAtConnectedHour = +freqList[keyAtConnectedHour].freq;
+  var lastCount = countAtConnectedHour;
+  for (var i = 0; i < keyAtConnectedHour; i++) {
+    lastCount += +freqList[i].freq;
+  }
+
+  d3.select('#freq').html(lastCount);
 }

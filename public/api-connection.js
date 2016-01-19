@@ -16,7 +16,7 @@ tweets.on('tweets', function(data) {
 });
 
 freq.on('freq', function(data) {
-
+  makeFreqGraph(data);
 });
 
 trends.on('trends', function(data) {

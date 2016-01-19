@@ -80,8 +80,22 @@
   overflow-y: auto;
 }
 
-.hashtags-table {
+.hashtags-table, .tweets-table {
   width: 100%;
+}
+
+#freq-container {
+  position:relative;
+}
+
+#freq {
+  font-size: 75px;
+  width: 100%;
+  position:absolute;
+  top:50%;
+  height:10em;
+  margin-top:65px;
+  text-align: center;
 }
 
 /* Template style */

@@ -27,7 +27,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./lib/style/material.min.css">
-    <link rel="stylesheet" href="./lib/style/styles.css">
+    <link rel="stylesheet" href="./style.css">
 
     <script src="lib/js/material.min.js"></script>
     <script src="lib/js/d3.js"></script>
@@ -79,7 +79,12 @@
               <div class="mdl-grid mdl-cell mdl-cell--5-col mdl-grid--no-spacing">
                 <div class="mdl-grid mdl-cell--12-col mdl-grid--no-spacing">
                   <div class="nb-tweets mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-                    #Tweets since connection
+                    <div class="tweets-graph-title">
+                      <h2 class="mdl-card__title-text">Tweets since connection</h2>
+                    </div>
+                    <div id="freq-container">
+                      <div id="freq"></div>
+                    </div>
                   </div>
                   <div class="hashtags mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
                     <table class="hashtags-table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
@@ -103,7 +108,7 @@
           </div>
 
           <div class="tweets-log mdl-card mdl-shadow--2dp mdl-cell mdl-cell--6-col">
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <table class="tweets-table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
               <thead>
                 <tr>
                   <th class="mdl-data-table__cell--non-numeric">
