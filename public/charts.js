@@ -81,7 +81,7 @@ d3.json('data.json', function(error, data) {
         return d3.max(d, function(d) {
           return d.value;
         });
-      });
+      })
     ])
     .range([h - padding.bottom - padding.top, 0]);
 
