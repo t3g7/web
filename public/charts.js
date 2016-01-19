@@ -203,7 +203,7 @@ function makeGraphsTweets(data) {
     return new Date(a.date) - new Date(b.date);
   });
 
-  var tweet_texts = [];
+  var tweetTexts = [];
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.created_at);
     var date = formatDateUtc(datetime).split('T')[0]
@@ -211,45 +211,59 @@ function makeGraphsTweets(data) {
         + formatDateUtc(datetime).split('T')[1].split(':')[0]
         + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
 
+    console.log(d);
+
     var body = d.body;
     var retweets = d.retweet_count;
     var sentiment = d.sentiment;
+    var responseTime = d.response_time;
+    var username = d.user_screen_name;
 
-    if (tweet_texts.indexOf(body) == -1) {
-      tweet_texts.push({
+    if (tweetTexts.indexOf(body) == -1) {
+      tweetTexts.push({
         body: body,
         date: new Date(date),
         retweets: retweets,
-        sentiment: sentiment
+        sentiment: sentiment,
+        user: username,
+        responseTime: String(responseTime)
       });
     }
   });
 
-  tweet_texts = tweet_texts.sort(function(a, b) {
+  tweetTexts = tweetTexts.sort(function(a, b) {
     return new Date(b.date) - new Date(a.date);
   });
 
-  /*d3.select('.tweets-log').append('ul').selectAll('li')
-      .data(tweet_texts)
-      .enter()
-      .append('li')
-      .html(function(d) {
-          return d.body + " " + d.sentiment  + " " + d.retweets;
-      });*/
-
   d3.select('.tweets-body').selectAll()
-    .data(tweet_texts).enter()
+    .data(tweetTexts).enter()
     .append('tr')
     .html(function(d) {
       return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
     });
 
-  /* x.domain(log.map(function (d) {
-      return d.date;
-  }));
-  y.domain([0, d3.max(log, function (d) {
-      return d.frequency;
-  })]); */
+  // https://stackoverflow.com/questions/1199352/smart-way-to-shorten-long-strings-with-javascript
+  String.prototype.trunc = function(n, useWordBoundary) {
+    var isTooLong = this.length > n,
+        s_ = isTooLong ? this.substr(0,n-1) : this;
+        s_ = (useWordBoundary && isTooLong) ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
+    return  isTooLong ? s_ + '&hellip;' : s_;
+  };
+
+  var responseList = [];
+  for (var i = 0; i < tweetTexts.length; i++) {
+    var body = tweetTexts[i].body
+    if (body.indexOf("@Orange_conseil") > -1 || body.indexOf("@Sosh_fr") > -1 || body.indexOf("@orange") > -1 || body.indexOf("@Orange_France") > -1) {
+      responseList.push(tweetTexts[i]);
+    }
+  }
+
+  d3.select('.response-body').selectAll()
+    .data(tweetTexts).enter()
+    .append('tr')
+    .html(function(d) {
+      return '<td class="response-text mdl-data-table__cell--non-numeric">' + d.body.trunc(60) + '</td><td class="response-user">' + d.user + '</td><td class="response-time">' + d.responseTime.replace('null', 'Not answered') + '</td>';
+    });
 
   function type(d) {
     d.frequency = +d.frequency;

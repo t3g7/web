@@ -80,8 +80,24 @@
 
             <div class="left-bottom-grid mdl-grid mdl-cell--12-col mdl-grid--no-spacing">
               <div class="mdl-grid mdl-cell mdl-cell--7-col mdl-grid--no-spacing">
-                <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-                  Response time per tweet
+                <div class="response-log mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                  <table class="response-table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                    <thead>
+                      <tr>
+                        <th class="response-th-text mdl-data-table__cell--non-numeric">
+                          Tweet
+                        </th>
+                        <th class="response-th-user">
+                          User
+                        </th>
+                        <th class="response-th-time">
+                          Response time
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="response-body">
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div class="mdl-grid mdl-cell mdl-cell--5-col mdl-grid--no-spacing">

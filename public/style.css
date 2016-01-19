@@ -101,6 +101,12 @@
   overflow-y: auto;
 }
 
+.response-log {
+  min-height: 58vh;
+  max-height: 58vh;
+  overflow-y: auto;
+}
+
 .hashtags {
   margin-top: 10px !important;
   margin-left: 20px !important;
@@ -109,8 +115,30 @@
   overflow-y: auto;
 }
 
-.hashtags-table, .tweets-table {
+.hashtags-table, .tweets-table, .response-table {
   width: 100%;
+}
+
+.response-table {
+  table-layout: fixed;
+}
+
+.response-th-user, .response-user {
+  padding-left: 9px !important;
+  padding-right: 9px !important;
+  width: 55px;
+}
+
+.response-th-time, .response-time {
+  padding-left: 9px !important;
+  padding-right: 9px !important;
+  width: 50px;
+}
+
+.response-th-text, .response-text {
+  padding-left: 9px !important;
+  padding-right: 9px !important;
+  width: 130px;
 }
 
 #freq-container {
