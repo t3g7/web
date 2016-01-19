@@ -61,11 +61,6 @@
   margin-left: 20px !important;
 }
 
-.freq-tweets {
-  margin-top: 10px !important;
-  margin-left: 20px !important;
-}
-
 .tweets-freq-graph {
   min-height: 30vh;
   max-height: 35vh;
@@ -75,6 +70,18 @@
   min-height: 89vh;
   max-height: 89vh;
   overflow-y: auto;
+}
+
+.hashtags {
+  margin-top: 10px !important;
+  margin-left: 20px !important;
+  min-height: 34vh;
+  max-height: 34vh;
+  overflow-y: auto;
+}
+
+.hashtags-table {
+  width: 100%;
 }
 
 /* Template style */

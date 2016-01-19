@@ -22,23 +22,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TwitterGraph</title>
+    <title>DataGraph</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./lib/style/material.min.css">
     <link rel="stylesheet" href="./lib/style/styles.css">
 
-    <style>
-
-
-		</style>
+    <script src="lib/js/material.min.js"></script>
+    <script src="lib/js/d3.js"></script>
+    <script src="lib/js/socket.io.js"></script>
   </head>
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
         <div class="header-bar mdl-layout__header-row">
-          <span class="header-title mdl-layout-title">TwitterGraph</span>
+          <span class="header-title mdl-layout-title">DataGraph</span>
           <div class="mdl-layout-spacer"></div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
@@ -59,7 +58,6 @@
       </header>
 
       <main class="mdl-layout__content mdl-color--grey-100">
-
         <div class="content-grid mdl-grid">
           <div class="demo-cards mdl-cell mdl-cell--6-col mdl-grid mdl-grid--no-spacing">
             <div class="tweets-freq-graph mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
@@ -83,8 +81,21 @@
                   <div class="nb-tweets mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
                     #Tweets since connection
                   </div>
-                  <div class="freq-tweets mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-                    Trending hashtags
+                  <div class="hashtags mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+                    <table class="hashtags-table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                      <thead>
+                        <tr>
+                          <th class="mdl-data-table__cell--non-numeric">
+                            Trending hashtags
+                          </th>
+                          <th>
+                            At
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="hashtags-list">
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -112,8 +123,7 @@
           </div>
       </main>
     </div>
-    <script src="./lib/js/material.min.js"></script>
-    <script src="lib/js/d3.js"></script>
     <script src="charts.js"></script>
+    <script src="api-connection.js"></script>
   </body>
 </html>

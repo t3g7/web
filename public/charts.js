@@ -4,13 +4,7 @@ var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
-d3.json('data.json', function(error, data) {
-  /*var color_hash = {
-      0: ["Neutral","#3182BD"],
-      1: ["Positive","#31A354"],
-      2: ["Negative","#D61B1D"]
-  };*/
-
+function makeGraphsTweets(data) {
   var color_hash = {
     0: ["Neutral","#1E88E5"],
     1: ["Positive","#4CAF50"],
@@ -70,9 +64,10 @@ d3.json('data.json', function(error, data) {
 
   d3.layout.stack(dataset);
 
+  var now = new Date(dataset[0][dataset[0].length - 1].key);
   //Set up scales
   var xScale = d3.time.scale()
-    .domain([new Date(dataset[0][0].key), d3.time.minute.offset(new Date(dataset[0][dataset[0].length - 1].key), 8)])
+    .domain([now.setMinutes(now.getMinutes() - 20), d3.time.minute.offset(new Date(dataset[0][dataset[0].length - 1].key), 1)])
     .rangeRound([0, w - padding.left - padding.right]);
 
   var yScale = d3.scale.linear()
@@ -88,7 +83,7 @@ d3.json('data.json', function(error, data) {
   var xAxis = d3.svg.axis()
     .scale(xScale)
     .orient("bottom")
-    .ticks(d3.time.minute, 2);
+    .ticks(d3.time.minute, 1);
 
   var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -193,10 +188,10 @@ d3.json('data.json', function(error, data) {
         .text(color_hash[String(i)][0]);
     });
 
-  var freq_data = [];
+  var log = [];
   for (var date in count) {
     if (count.hasOwnProperty(date)) {
-      freq_data.push({
+      log.push({
         date: new Date(date),
         frequency: count[date],
         sentiment: sentimentDict[date]
@@ -204,12 +199,18 @@ d3.json('data.json', function(error, data) {
     }
   }
 
-  freq_data = freq_data.sort(function(a, b) {
+  log = log.sort(function(a, b) {
     return new Date(a.date) - new Date(b.date);
   });
 
   var tweet_texts = [];
   data.forEach(function(d) {
+    var datetime = formatDateUtc.parse(d.created_at);
+    var date = formatDateUtc(datetime).split('T')[0]
+        + ' '
+        + formatDateUtc(datetime).split('T')[1].split(':')[0]
+        + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+
     var body = d.body;
     var retweets = d.retweet_count;
     var sentiment = d.sentiment;
@@ -217,10 +218,15 @@ d3.json('data.json', function(error, data) {
     if (tweet_texts.indexOf(body) == -1) {
       tweet_texts.push({
         body: body,
+        date: new Date(date),
         retweets: retweets,
         sentiment: sentiment
       });
     }
+  });
+
+  tweet_texts = tweet_texts.sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
   });
 
   /*d3.select('.tweets-log').append('ul').selectAll('li')
@@ -238,10 +244,10 @@ d3.json('data.json', function(error, data) {
       return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
     });
 
-  /* x.domain(freq_data.map(function (d) {
+  /* x.domain(log.map(function (d) {
       return d.date;
   }));
-  y.domain([0, d3.max(freq_data, function (d) {
+  y.domain([0, d3.max(log, function (d) {
       return d.frequency;
   })]); */
 
@@ -249,4 +255,56 @@ d3.json('data.json', function(error, data) {
     d.frequency = +d.frequency;
     return d;
   }
-});
+}
+
+function makeListTrends(data) {
+  var count = {};
+  data.forEach(function(d) {
+    var datetime = formatDateUtc.parse(d.date);
+    var date = formatDateUtc(datetime).split('T')[0]
+        + ' '
+        + formatDateUtc(datetime).split('T')[1].split(':')[0]
+        + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+        //+ ':' + formatDateUtc(datetime).split('T')[1].split(':')[2];
+    count[date] = (count[date]||0) + 1;
+  });
+
+  var trends = [];
+  for (var date in count) {
+    if (count.hasOwnProperty(date)) {
+      trends.push({
+        date: new Date(date)
+      })
+    }
+  }
+
+  var hashtagsList = [];
+  data.forEach(function(d) {
+    var datetime = formatDateUtc.parse(d.date);
+    var date = formatDateUtc(datetime).split('T')[0]
+        + ' '
+        + formatDateUtc(datetime).split('T')[1].split(':')[0]
+        + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
+
+    var hashtags = [];
+    for (var key in d.hashtags) {
+      hashtags.push(key);
+    }
+
+    hashtagsList.push({
+      hashtags: hashtags.toString().replace(/,/g, ' '),
+      date: new Date(date)
+    });
+  });
+  console.log(hashtagsList);
+  hashtagsList = hashtagsList.sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  d3.select('.hashtags-list').selectAll()
+    .data(hashtagsList).enter()
+    .append('tr')
+    .html(function(d) {
+      return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
+    });
+}
