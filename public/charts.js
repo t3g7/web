@@ -4,6 +4,14 @@ var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
+var connectedHour = new Date("January 14, 2016 12:54:00 GMT+0100");
+/*var connectedHour = new Date().toISOString();
+var datetime = formatDateUtc.parse(connectedHour);
+var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
+    + ' '
+    + formatDateUtc(datetime).split('T')[1].split(':')[0]
+    + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);*/
+
 function makeGraphsTweets(data) {
   var color_hash = {
     0: ["Neutral","#1E88E5"],
@@ -211,8 +219,6 @@ function makeGraphsTweets(data) {
         + formatDateUtc(datetime).split('T')[1].split(':')[0]
         + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
 
-    console.log(d);
-
     var body = d.body;
     var retweets = d.retweet_count;
     var sentiment = d.sentiment;
@@ -239,7 +245,9 @@ function makeGraphsTweets(data) {
     .data(tweetTexts).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
+      }
     });
 
   // https://stackoverflow.com/questions/1199352/smart-way-to-shorten-long-strings-with-javascript
@@ -262,7 +270,9 @@ function makeGraphsTweets(data) {
     .data(tweetTexts).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="response-text mdl-data-table__cell--non-numeric">' + d.body.trunc(60) + '</td><td class="response-user">' + d.user + '</td><td class="response-time">' + d.responseTime.replace('null', 'Not answered') + '</td>';
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="response-text mdl-data-table__cell--non-numeric">' + d.body.trunc(60) + '</td><td class="response-user">' + d.user + '</td><td class="response-time">' + d.responseTime.replace('null', 'Not answered') + '</td>';
+      }
     });
 
   function type(d) {
@@ -310,19 +320,13 @@ function makeListTrends(data) {
     .data(hashtagsList).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
+      }
     });
 }
 
 function makeFreqGraph(data) {
-  //var connectedHour = new Date("January 14, 2016 08:39:00 GMT+0100");
-  var connectedHour = new Date().toISOString();
-  var datetime = formatDateUtc.parse(connectedHour);
-  var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
-      + ' '
-      + formatDateUtc(datetime).split('T')[1].split(':')[0]
-      + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
-
   var freqList = [];
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.date);
