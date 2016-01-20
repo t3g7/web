@@ -1,4 +1,4 @@
-var w = 825;
+var w = 810;
 var h = 240;
 var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
@@ -160,7 +160,7 @@ function makeGraphsTweets(data) {
 
   svg.append("g")
     .attr("class","x axis")
-    .attr("transform","translate(20," + (h - padding.bottom) + ")")
+    .attr("transform","translate(27.5," + (h - padding.bottom) + ")")
     .call(xAxis);
 
   svg.append("g")
