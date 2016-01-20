@@ -4,13 +4,13 @@ var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
-var connectedHour = new Date("January 14, 2016 12:54:00 GMT+0100");
-/*var connectedHour = new Date().toISOString();
+//var connectedHour = new Date("January 14, 2016 12:54:00 GMT+0100");
+var connectedHour = new Date().toISOString();
 var datetime = formatDateUtc.parse(connectedHour);
 var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
     + ' '
     + formatDateUtc(datetime).split('T')[1].split(':')[0]
-    + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);*/
+    + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
 
 function makeGraphsTweets(data) {
   var color_hash = {
@@ -262,7 +262,7 @@ function makeGraphsTweets(data) {
   var responseList = [];
   for (var i = 0; i < tweetTexts.length; i++) {
     var body = tweetTexts[i].body
-    if (body.indexOf("@Orange_conseil") > -1 || body.indexOf("@Sosh_fr") > -1 || body.indexOf("@orange") > -1 || body.indexOf("@Orange_France") > -1) {
+    if (body.indexOf("@Orange_conseil") > -1 || body.indexOf("@Sosh_fr") > -1) {
       responseList.push(tweetTexts[i]);
     }
   }
