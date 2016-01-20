@@ -91,6 +91,7 @@ function makeGraphsTweets(data) {
   var xAxis = d3.svg.axis()
     .scale(xScale)
     .orient("bottom")
+    .tickFormat(d3.time.format("%H:%M"))
     .ticks(d3.time.minute, 1);
 
   var yAxis = d3.svg.axis()
