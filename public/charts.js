@@ -246,6 +246,7 @@ function makeGraphsTweets(data) {
     return new Date(b.date) - new Date(a.date);
   });
 
+  d3.select(".tweets-body").selectAll("tr").remove();
   d3.select('.tweets-body').selectAll()
     .data(tweetTexts).enter()
     .append('tr')
@@ -271,6 +272,7 @@ function makeGraphsTweets(data) {
     }
   }
 
+  d3.select(".response-body").selectAll("tr").remove();
   d3.select('.response-body').selectAll()
     .data(tweetTexts).enter()
     .append('tr')
@@ -287,6 +289,8 @@ function makeGraphsTweets(data) {
 }
 
 function makeListTrends(data) {
+
+  d3.select(".hashtags-list").selectAll("tr").remove();
 
   var count = {};
   data.forEach(function(d) {
