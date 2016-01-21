@@ -13,6 +13,10 @@ var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
     + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
 
 function makeGraphsTweets(data) {
+
+  // Remove existing svg to update it with new data
+  d3.select("#bar").select("svg").remove();
+
   var color_hash = {
     0: ["Neutral","#1E88E5"],
     1: ["Positive","#4CAF50"],
@@ -143,7 +147,7 @@ function makeGraphsTweets(data) {
 
   rects.transition()
     .duration(function(d, i) {
-      return 5 * i;
+      return 0.005 * i;
     })
     .ease("linear")
     .attr("x", function(d) {
@@ -283,6 +287,7 @@ function makeGraphsTweets(data) {
 }
 
 function makeListTrends(data) {
+
   var count = {};
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.date);

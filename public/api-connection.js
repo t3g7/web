@@ -14,15 +14,9 @@ socket.on('connect', function() {
 
 socket.on('tweets', function(data) {
   makeGraphsTweets(data);
+  // Workaround used because the NodeJS driver
+  // for Cassandra is not really streaming data
   socket.emit('tweets-next', 'next');
-  console.log(data);
-});
-
-// Workaround used because the NodeJS driver
-// for Cassandra is not really streaming data
-socket.on('tweets-next', function(data) {
-  makeGraphsTweets(data);
-  console.log(data);
 });
 
 socket.on('freq', function(data) {
@@ -30,17 +24,7 @@ socket.on('freq', function(data) {
   socket.emit('freq-next', 'next');
 });
 
-socket.on('freq-next', function(data) {
-  makeFreqGraph(data);
-  console.log(data);
-});
-
 socket.on('trends', function(data) {
   makeListTrends(data);
   socket.emit('trends-next', 'next');
-});
-
-socket.on('trends-next', function(data) {
-  makeListTrends(data);
-  console.log(data);
 });
