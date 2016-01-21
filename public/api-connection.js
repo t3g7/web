@@ -3,22 +3,25 @@
  * http://socket.io/docs/#restricting-yourself-to-a-namespace
 */
 var api = 'http://localhost:8080';
-var tweets = io(api + '/tweets');
-var freq = io(api + '/freq');
-var trends = io(api + '/trends');
+var socket = io(api);
 
-tweets.on('connect', function() {
+socket.on('connect', function() {
   console.log("Connected");
 });
 
-tweets.on('tweets', function(data) {
+socket.on('tweets', function(data) {
   makeGraphsTweets(data);
+  // Workaround used because the NodeJS driver
+  // for Cassandra is not really streaming data
+  socket.emit('tweets-next', 'next');
 });
 
-freq.on('freq', function(data) {
+socket.on('freq', function(data) {
   makeFreqGraph(data);
+  socket.emit('freq-next', 'next');
 });
 
-trends.on('trends', function(data) {
+socket.on('trends', function(data) {
   makeListTrends(data);
+  socket.emit('trends-next', 'next');
 });

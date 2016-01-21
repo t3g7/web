@@ -1,10 +1,22 @@
-var w = 825;
+var w = 810;
 var h = 240;
 var padding = {top: 10, right: 40, bottom: 20, left: 20};
 
 var formatDateUtc = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ");
 
+//var connectedHour = new Date("January 14, 2016 12:54:00 GMT+0100");
+var connectedHour = new Date().toISOString();
+var datetime = formatDateUtc.parse(connectedHour);
+var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
+    + ' '
+    + formatDateUtc(datetime).split('T')[1].split(':')[0]
+    + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
+
 function makeGraphsTweets(data) {
+
+  // Remove existing svg to update it with new data
+  d3.select("#bar").select("svg").remove();
+
   var color_hash = {
     0: ["Neutral","#1E88E5"],
     1: ["Positive","#4CAF50"],
@@ -83,6 +95,7 @@ function makeGraphsTweets(data) {
   var xAxis = d3.svg.axis()
     .scale(xScale)
     .orient("bottom")
+    .tickFormat(d3.time.format("%H:%M"))
     .ticks(d3.time.minute, 1);
 
   var yAxis = d3.svg.axis()
@@ -134,7 +147,7 @@ function makeGraphsTweets(data) {
 
   rects.transition()
     .duration(function(d, i) {
-      return 5 * i;
+      return 0.005 * i;
     })
     .ease("linear")
     .attr("x", function(d) {
@@ -151,7 +164,7 @@ function makeGraphsTweets(data) {
 
   svg.append("g")
     .attr("class","x axis")
-    .attr("transform","translate(20," + (h - padding.bottom) + ")")
+    .attr("transform","translate(27.5," + (h - padding.bottom) + ")")
     .call(xAxis);
 
   svg.append("g")
@@ -211,8 +224,6 @@ function makeGraphsTweets(data) {
         + formatDateUtc(datetime).split('T')[1].split(':')[0]
         + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1];
 
-    console.log(d);
-
     var body = d.body;
     var retweets = d.retweet_count;
     var sentiment = d.sentiment;
@@ -235,11 +246,14 @@ function makeGraphsTweets(data) {
     return new Date(b.date) - new Date(a.date);
   });
 
+  d3.select(".tweets-body").selectAll("tr").remove();
   d3.select('.tweets-body').selectAll()
     .data(tweetTexts).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.body + "</td><td>" + d.sentiment + "</td><td>" + d.retweets + "</td>";
+      }
     });
 
   // https://stackoverflow.com/questions/1199352/smart-way-to-shorten-long-strings-with-javascript
@@ -253,16 +267,19 @@ function makeGraphsTweets(data) {
   var responseList = [];
   for (var i = 0; i < tweetTexts.length; i++) {
     var body = tweetTexts[i].body
-    if (body.indexOf("@Orange_conseil") > -1 || body.indexOf("@Sosh_fr") > -1 || body.indexOf("@orange") > -1 || body.indexOf("@Orange_France") > -1) {
+    if (body.indexOf("@Orange_conseil") > -1 || body.indexOf("@Sosh_fr") > -1) {
       responseList.push(tweetTexts[i]);
     }
   }
 
+  d3.select(".response-body").selectAll("tr").remove();
   d3.select('.response-body').selectAll()
     .data(tweetTexts).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="response-text mdl-data-table__cell--non-numeric">' + d.body.trunc(60) + '</td><td class="response-user">' + d.user + '</td><td class="response-time">' + d.responseTime.replace('null', 'Not answered') + '</td>';
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="response-text mdl-data-table__cell--non-numeric">' + d.body.trunc(60) + '</td><td class="response-user">' + d.user + '</td><td class="response-time">' + d.responseTime.replace('null', 'Not answered') + '</td>';
+      }
     });
 
   function type(d) {
@@ -272,6 +289,9 @@ function makeGraphsTweets(data) {
 }
 
 function makeListTrends(data) {
+
+  d3.select(".hashtags-list").selectAll("tr").remove();
+
   var count = {};
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.date);
@@ -310,19 +330,13 @@ function makeListTrends(data) {
     .data(hashtagsList).enter()
     .append('tr')
     .html(function(d) {
-      return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
+      if (connectedHour.getTime() <= d.date.getTime()) {
+        return '<td class="log-text mdl-data-table__cell--non-numeric">' + d.hashtags + "</td><td>" + new Date(d.date).getHours() + ":" + (new Date(d.date).getMinutes()<10?'0':'') + new Date(d.date).getMinutes() + "</td>";
+      }
     });
 }
 
 function makeFreqGraph(data) {
-  //var connectedHour = new Date("January 14, 2016 08:39:00 GMT+0100");
-  var connectedHour = new Date().toISOString();
-  var datetime = formatDateUtc.parse(connectedHour);
-  var connectedHour = new Date(formatDateUtc(datetime).split('T')[0]
-      + ' '
-      + formatDateUtc(datetime).split('T')[1].split(':')[0]
-      + ':' + formatDateUtc(datetime).split('T')[1].split(':')[1]);
-
   var freqList = [];
   data.forEach(function(d) {
     var datetime = formatDateUtc.parse(d.date);
