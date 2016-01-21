@@ -4,9 +4,6 @@
 */
 var api = 'http://localhost:8080';
 var socket = io(api);
-//var tweets = io(api + '/tweets');
-//var freq = io(api + '/freq');
-//var trends = io(api + '/trends');
 
 socket.on('connect', function() {
   console.log("Connected");
